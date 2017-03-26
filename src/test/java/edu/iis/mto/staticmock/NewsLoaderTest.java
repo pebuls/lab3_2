@@ -2,6 +2,7 @@ package edu.iis.mto.staticmock;
 
 import edu.iis.mto.staticmock.reader.NewsReader;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -12,9 +13,10 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest( ConfigurationLoader.class )
+@PrepareForTest( {ConfigurationLoader.class, NewsReaderFactory.class} )
 public class NewsLoaderTest {
 
+    private NewsLoader newsLoader;
 
     private String readerType = "testDataReader";
 
@@ -28,6 +30,8 @@ public class NewsLoaderTest {
         setUpConfig();
         setUpNews();
         setUpReader();
+
+        newsLoader = new NewsLoader();
     }
 
     private void setUpConfig() {
