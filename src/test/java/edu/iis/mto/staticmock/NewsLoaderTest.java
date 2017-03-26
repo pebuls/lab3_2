@@ -8,16 +8,14 @@ import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.times;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( {ConfigurationLoader.class, NewsReaderFactory.class, PublishableNews.class} )
@@ -110,6 +108,13 @@ public class NewsLoaderTest {
         assertThat(news.subscribedNews.get(subscribedInfo1.getContent()), is(equalTo(subscribedInfo1.getSubscriptionType())));
         assertThat(news.subscribedNews.keySet(), hasItem(subscribedInfo2.getContent()));
         assertThat(news.subscribedNews.get(subscribedInfo2.getContent()), is(equalTo(subscribedInfo2.getSubscriptionType())));
+    }
+
+    @Test
+    public void testLoadNews_CheckNewsReaderFactoryCalledWithCorrectParameter() throws Exception {
+        newsLoader.loadNews();
+        verifyStatic( times(1));
+        NewsReaderFactory.getReader(readerType);
     }
 
 }
