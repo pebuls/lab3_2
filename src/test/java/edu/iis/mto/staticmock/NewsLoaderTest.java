@@ -12,8 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -90,6 +89,15 @@ public class NewsLoaderTest {
 
         mockStatic(NewsReaderFactory.class);
         when(NewsReaderFactory.getReader(readerType)).thenReturn(testDataReader);
+    }
+
+    @Test
+    public void testLoadNews_CheckPublicMessages() throws Exception {
+        PublishableNewsAnalyzer news = (PublishableNewsAnalyzer) newsLoader.loadNews();
+
+        assertThat(news.publicNews, hasItem(publicInfo1.getContent()));
+        assertThat(news.publicNews, not(hasItem(subscribedInfo1.getContent())));
+        assertThat(news.publicNews, not(hasItem(subscribedInfo2.getContent())));
     }
 
 }
