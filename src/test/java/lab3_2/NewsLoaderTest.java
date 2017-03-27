@@ -31,6 +31,7 @@ import static org.hamcrest.CoreMatchers.*;
 	ConfigurationLoader.class,
 	NewsReaderFactory.class
 })
+
 public class NewsLoaderTest {
 	
 	private ConfigurationLoader testConfigurationLoader = null;
