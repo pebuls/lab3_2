@@ -11,8 +11,13 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import edu.iis.mto.staticmock.Configuration;
 import edu.iis.mto.staticmock.ConfigurationLoader;
+import edu.iis.mto.staticmock.PublishableNews;
+import edu.iis.mto.staticmock.SubsciptionType;
 
 import static org.powermock.api.mockito.PowerMockito.*;
+
+import java.util.List;
+
 import org.mockito.internal.util.reflection.*;
 import static org.hamcrest.CoreMatchers.*;
 
@@ -41,7 +46,26 @@ public class NewsLoaderTest {
 	}
 	
 	@Test
-	public void test() {
-		fail("Not yet implemented!");
+	public void testSubANewsAddedCorrectly() {
+		PublishableNews pn = PublishableNews.create();
+		pn.addForSubscription("subA", SubsciptionType.A);
+		List<String> testList = (List<String>) Whitebox.getInternalState(pn, "subscribentContent");
+		assertThat(testList.size(), is(not(equalTo(0))));
+	}
+	
+	@Test
+	public void testSubBNewsAddedCorrectly() {
+		PublishableNews pn = PublishableNews.create();
+		pn.addForSubscription("subA", SubsciptionType.B);
+		List<String> testList = (List<String>) Whitebox.getInternalState(pn, "subscribentContent");
+		assertThat(testList.size(), is(not(equalTo(0))));
+	}
+	
+	@Test
+	public void testSubCNewsAddedCorrectly() {
+		PublishableNews pn = PublishableNews.create();
+		pn.addForSubscription("subA", SubsciptionType.C);
+		List<String> testList = (List<String>) Whitebox.getInternalState(pn, "subscribentContent");
+		assertThat(testList.size(), is(not(equalTo(0))));
 	}
 }
