@@ -20,16 +20,7 @@ import edu.iis.mto.staticmock.SubsciptionType;
 import edu.iis.mto.staticmock.reader.NewsReader;
 
 import static org.powermock.api.mockito.PowerMockito.*;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.*;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import static org.hamcrest.CoreMatchers.*;
 
