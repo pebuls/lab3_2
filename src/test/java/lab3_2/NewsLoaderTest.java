@@ -21,15 +21,23 @@ import edu.iis.mto.staticmock.reader.NewsReader;
 
 import static org.powermock.api.mockito.PowerMockito.*;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.*;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
 import static org.hamcrest.CoreMatchers.*;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( {
 	ConfigurationLoader.class,
-	NewsReaderFactory.class
+	NewsReaderFactory.class,
+	PublishableNews.class
 })
 
 public class NewsLoaderTest {
@@ -42,6 +50,12 @@ public class NewsLoaderTest {
 		initFakeConfigLoader();
 		initFakeConfig();
 		initFakeNewsReader();
+		initFakeNewsContentChecker();
+	}
+	
+	public void initFakeNewsContentChecker() {
+		mockStatic(PublishableNews.class);
+		when(PublishableNews.create()).thenReturn(new PublishableNewsContentChecker());
 	}
 	
 	public void initFakeConfigLoader() {
@@ -74,36 +88,15 @@ public class NewsLoaderTest {
 	}
 	
 	@Test
-	public void testSubANewsAddedCorrectly() {
-		PublishableNews pn = PublishableNews.create();
-		pn.addForSubscription("subA", SubsciptionType.A);
-		List<String> testList = (List<String>) Whitebox.getInternalState(pn, "subscribentContent");
-		assertThat(testList.size(), is(not(equalTo(0))));
-	}
-	
-	@Test
-	public void testSubBNewsAddedCorrectly() {
-		PublishableNews pn = PublishableNews.create();
-		pn.addForSubscription("subB", SubsciptionType.B);
-		List<String> testList = (List<String>) Whitebox.getInternalState(pn, "subscribentContent");
-		assertThat(testList.size(), is(not(equalTo(0))));
-	}
-	
-	@Test
-	public void testSubCNewsAddedCorrectly() {
-		PublishableNews pn = PublishableNews.create();
-		pn.addForSubscription("subC", SubsciptionType.C);
-		List<String> testList = (List<String>) Whitebox.getInternalState(pn, "subscribentContent");
-		assertThat(testList.size(), is(not(equalTo(0))));
-	}
-	
-	@Test
-	public void testPublicNewsAddedCorrectly() {
-		PublishableNews pn = PublishableNews.create();
-		pn.addPublicInfo("pub");
-		List<String> testList = (List<String>) Whitebox.getInternalState(pn, "publicContent");
-		assertThat(testList.size(), is(not(equalTo(0))));
-		assertThat(testList.get(0), is(equalTo("pub")));
+	public void testNewsAddedCorrectly() throws Exception {
+		NewsLoader testLoader = new NewsLoader();
+		PublishableNewsContentChecker testChecker = (PublishableNewsContentChecker) testLoader.loadNews();
+		assertThat(testChecker.getSubscribentContent().size(), is(equalTo(3)));
+		assertThat(testChecker.getSubscribentContent().get(0), is(equalTo("subA")));
+		assertThat(testChecker.getSubscribentContent().get(1), is(equalTo("subB")));
+		assertThat(testChecker.getSubscribentContent().get(2), is(equalTo("subC")));
+		assertThat(testChecker.getPublicContent().size(), is(equalTo(1)));
+		assertThat(testChecker.getPublicContent().get(0), is(equalTo("pub")));
 	}
 	
 	@Test
