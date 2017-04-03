@@ -28,14 +28,14 @@ public class NewsLoaderTest {
     private IncomingInfo subscribedInfoC = new IncomingInfo("SubscribedInfoC", SubscriptionType.C);
 
 
-    @Before
-    public void setUp() throws Exception {
-
+    private void setUpNews() {
         testIncomingNews = new IncomingNews();
         testIncomingNews.add(publicInfoNone);
         testIncomingNews.add(subscribedInfoA);
         testIncomingNews.add(subscribedInfoC);
+    }
 
+    private void setUpConfig() {
         mockStatic(ConfigurationLoader.class);
         ConfigurationLoader mockLoader = mock(ConfigurationLoader.class);
         when(ConfigurationLoader.getInstance()).thenReturn(mockLoader);
@@ -44,7 +44,9 @@ public class NewsLoaderTest {
         Whitebox.setInternalState(configuration, "readerType", readerType);
 
         when(mockLoader.loadConfiguration()).thenReturn(configuration);
+    }
 
+    private void setUpReader() {
         NewsReader testDataReader = new NewsReader() {
             @Override
             public IncomingNews read() {
@@ -55,5 +57,16 @@ public class NewsLoaderTest {
         mockStatic(NewsReaderFactory.class);
         when(NewsReaderFactory.getReader(readerType)).thenReturn(testDataReader);
     }
+
+    @Before
+    public void setUp() throws Exception {
+
+        setUpNews();
+        setUpConfig();
+        setUpReader();
+
+        newsLoader = new NewsLoader();
+    }
+
 
 }
