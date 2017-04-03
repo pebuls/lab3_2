@@ -85,6 +85,15 @@ public class NewsLoaderTest {
         assertThat(publishableNewsForTests.subscribedNews.get(subscribedInfoA.getContent()), is(equalTo(subscribedInfoA.getSubscriptionType())));
     }
 
+    @Test
+    public void CheckIfPublicInfo() throws Exception {
+        publishableNewsForTests = (PublishableNewsForTests) newsLoader.loadNews();
+
+        assertThat(publishableNewsForTests.publicNews, hasItem(publicInfoNone.getContent()));
+        assertThat(publishableNewsForTests.publicNews, not(hasItem(subscribedInfoA.getContent())));
+        assertThat(publishableNewsForTests.publicNews, not(hasItem(subscribedInfoC.getContent())));
+    }
+
 
 
 }
