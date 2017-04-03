@@ -17,7 +17,7 @@ public class PublishableNews {
 		
 	}
 
-	public void addForSubscription(String content, SubsciptionType subscriptionType) {
+	public void addForSubscription(String content, SubscriptionType subscriptionType) {
 		// TODO Auto-generated method stub
 		
 	}

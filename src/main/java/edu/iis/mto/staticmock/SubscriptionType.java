@@ -1,6 +1,6 @@
 package edu.iis.mto.staticmock;
 
-public enum SubsciptionType {
+public enum SubscriptionType {
 
 	A, B, C, NONE;
 }
