@@ -2,15 +2,13 @@ package edu.iis.mto.staticmock;
 
 import edu.iis.mto.staticmock.reader.NewsReader;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
+import org.mockito.internal.util.reflection.Whitebox;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -21,38 +19,23 @@ import static org.powermock.api.mockito.PowerMockito.when;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ConfigurationLoader.class, NewsReaderFactory.class})
+@PrepareForTest({ConfigurationLoader.class, NewsReaderFactory.class, PublishableNews.class})
 public class NewsLoaderTest {
 
     private NewsLoader newsLoader;
+    private PublishableNewsForTests publishableNewsForTests;
     private String readerType = "testDataReader";
+
     private IncomingNews testIncomingNews = new IncomingNews();
     private IncomingInfo publicInfoNone = new IncomingInfo("publicInfoNone", SubscriptionType.NONE);
     private IncomingInfo subscribedInfoA = new IncomingInfo("subscribedInfoA", SubscriptionType.A);
     private IncomingInfo subscribedInfoC = new IncomingInfo("SubscribedInfoC", SubscriptionType.C);
 
-
-    private class PublishableNewsForTests extends PublishableNews {
-
-        private final List<String> publicNews = new ArrayList<>();
-        private final HashMap<String, SubscriptionType> subscribedNews = new HashMap<>();
-
-        @Override
-        public void addPublicInfo(String content) {
-            super.addPublicInfo(content);
-            publicNews.add(content);
-        }
-
-        @Override
-        public void addForSubscription(String content, SubscriptionType subscriptionType) {
-            super.addForSubscription(content, subscriptionType);
-            subscribedNews.put(content, subscriptionType);
-        }
-    }
-
-
-
     private void setUpNews() {
+
+        mockStatic(PublishableNews.class);
+        when(PublishableNews.create()).thenReturn(new PublishableNewsForTests());
+
         testIncomingNews = new IncomingNews();
         testIncomingNews.add(publicInfoNone);
         testIncomingNews.add(subscribedInfoA);
@@ -91,6 +74,9 @@ public class NewsLoaderTest {
 
         newsLoader = new NewsLoader();
     }
+
+
+
 
 
 }
